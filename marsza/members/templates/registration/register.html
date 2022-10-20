@@ -1,0 +1,27 @@
+{% extends 'greetings/base.html' %}
+{% block title %}Zarejestruj się{% endblock %}
+
+{% block content %}
+ 
+
+<h1>Zarejestruj się</h1>
+<br>
+<br>
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <center><button class="btn btn-secondary">Zarejestruj</button></center>
+    </form>
+</div>
+<br>
+<br>
+<center>
+    <p>Masz już konto?</p>
+    <a href="{% url 'login' %}", class="btn btn-secondary">Zaloguj się</a>
+</center>
+<br>
+<br>
+<hr>
+
+{% endblock %}

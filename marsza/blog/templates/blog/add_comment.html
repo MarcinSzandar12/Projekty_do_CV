@@ -1,0 +1,39 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Dodaj komentarz!{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <center><h1>Napisz co sądzisz o poście!</h1></center>
+    <br>
+    <br>
+    <div class="form-group">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-secondary"><img src="{% static 'blog/images/send.png' %}" width="20" height="auto">&nbsp;Dodaj komentarz</button>
+        </form>
+    </div>
+    <br>
+    <br>
+    <center><a href="{% url 'blog:home' %}" class="btn btn-secondary">Wróć</a></center>
+
+    <script>
+        var name = "{{ user.id }}";
+        document.getElementById("user_id").value = name;
+    </script>
+
+{% else %}
+    <center>
+        Musisz być zalogowany by móc komentować!
+        <br>
+        <a class="link" href="{% url 'login' %}" class="btn btn-secondary">Zaloguj się</a>
+    </center>
+{% endif %}
+<br>
+<br>
+<hr>
+
+{% endblock %}

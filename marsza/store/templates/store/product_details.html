@@ -1,0 +1,48 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}MARSZA | SKLEP{% endblock %}
+
+{% block content %}
+
+<center><h1>Firmowy Sklep MARSZA!</h1></center>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div>
+    {% if product.image %}
+        <img style="float:left; margin-right:10px; width: 400px; height: 437px; object-fit: cover; border:none;" src="{{ product.image.url }}">
+    {% else %}
+    <img src="{% static 'store/images/placeholder.png' %}">
+    {% endif %}
+    <div class="form" style="
+    height: 200px;
+    width: 50%;
+    margin-left: 70px;
+    display: inline-block;
+    ">
+        <h4><strong>{{ product.name }}</strong></h4>
+        <hr>
+        <p>{{ product.description }}</p>
+        {% if product.digital == True %}        
+            <h6><strong>
+                Produkt jest w wersji cyfrowej. Zostanie wysłany na adres E-mail.<br><br>
+            </strong></h6>
+        {% endif %}  
+        <h6><strong>Cena: {{ product.price|floatformat:2 }} zł</strong></h6>        
+        <hr>
+
+        <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Dodaj do koszyka</button>
+        <a href="{% url 'store:store' %}" class="btn btn-outline-success">Wróć do sklepu</a>
+        <br>
+        <br>
+    </div>
+</div>
+<br>
+<br>
+
+
+{% endblock %}

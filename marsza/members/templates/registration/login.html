@@ -1,0 +1,35 @@
+{% extends 'greetings/base.html' %}
+{% block title %}Zaloguj się{% endblock %}
+
+{% block content %}
+ 
+<center><h1>Zaloguj się</h1></center>
+<br>
+<br>
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Nazwa użytkownika:</label>
+            <input type="text" class="form-control", name="username">
+        </div>
+        <div class="form-group">
+            <label>Hasło:</label>
+            <input type="password" class="form-control", name="password">
+        </div>
+
+        <button class="btn btn-secondary">Zaloguj</button>
+    </form>
+</div>
+<center>
+    <br>
+    <br>
+    <p>Nie masz jeszcze konta?</p>
+    <a href="{% url 'register' %}", class="btn btn-secondary">Zarejestruj się</a>
+</center>
+<br>
+<br>
+<hr>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'blog/base.html' %}
+{% block title %}Usuń Wpis!{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <center><h1>Czy napewno chcesz usunąć ten post?</h1></center>
+        <center><h5>{{ post.title }}</h5></center>
+        <br>
+        <br>
+        <center>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-danger">Tak</button>
+                <a href="{% url 'blog:home' %}" class="btn btn-success">Nie</a>
+            </form>
+        </div>
+        </center>
+    {% else %}
+        <center><h3>Nie masz uprawnień do usunięcia tego posta!</h3></center>
+    {% endif %}
+    <br>
+    <br>
+    <center><a href="{% url 'blog:home' %}" class="btn btn-secondary">Wróć</a></center>
+{% else %}
+<center>
+    Nie jesteś zalogowany!
+    <br>
+    <a class="link" href="{% url 'login' %}" class="btn btn-secondary">Zaloguj się</a>
+</center>
+{% endif %}
+<br>
+<br>
+<hr>
+{% endblock %}

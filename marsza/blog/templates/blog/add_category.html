@@ -1,0 +1,33 @@
+{% extends 'blog/base.html' %}
+{% block title %}Dodaj nową kategorię!{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <center>
+        <h1>Dodaj nową kategorię!</h1>
+        <br>
+        <br>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-secondary">Dodaj</button>
+            </form>
+        </div>
+        <br>
+        <br>
+        <a href="{% url 'blog:home' %}" class="btn btn-secondary">Wróć</a>
+    </center>
+{% else %}
+    <center>
+        Nie jesteś zalogowany!
+        <br>
+        <a class="link" href="{% url 'login' %}" class="btn btn-secondary">Zaloguj się</a>
+    </center>
+{% endif %}
+<br>
+<br>
+<hr>
+
+{% endblock %}

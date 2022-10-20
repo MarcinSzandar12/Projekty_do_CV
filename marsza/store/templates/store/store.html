@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}MARSZA | SKLEP{% endblock %}
+
+{% block content %}
+
+<center><h1>Firmowy Sklep MARSZA!</h1></center>
+<br>
+<br>
+<div class="row">
+    {% for product in products %}
+        <div class="col-lg-4">
+            {% if product.image %}
+                <img class="thumbnail" src="{{ product.image.url }}">
+            {% else %}
+            <img class="thumbnail" src="{% static 'store/images/placeholder.png' %}">
+            {% endif %}
+            <div class="box-element product">
+                <hr>
+                <h6 style="display: inline-block; float: right"><strong>{{ product.price|floatformat:2 }} zł</strong></h6>
+                <h6><strong>{{ product.name }}</strong></h6>
+                <hr>
+
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Dodaj do koszyka</button>
+                <a class="btn btn-outline-success" href="{% url 'store:product_details' product.id %}">Szczegóły</a>
+            </div>
+        </div>
+    {% endfor %}    
+</div>
+<br>
+<br>
+<hr>
+
+{% endblock %}

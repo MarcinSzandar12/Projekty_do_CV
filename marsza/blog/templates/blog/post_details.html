@@ -1,0 +1,157 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}MARSZA | BLOG{% endblock %}
+
+{% block content %}
+<style>
+    .commentdiv 
+    {
+      box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+	  background-color: #fff;
+	  border-radius: 4px;
+      width: 800px;
+	  padding: 10px;
+    }
+</style>
+
+<center>
+    <h1>{{ post.title }}</h1>
+    <small>Kategoria: <a href="{% url 'blog:category' post.category|slugify %}" style="text-decoration: none">{{ post.category }}</a></small><br>
+    <small>Dodano: {{ post.created|date:"d M Y H:i" }}</small>
+    {% if post.created != post.modified %}
+        <small>Edytowano: {{ post.modified|date:"d M Y H:i" }}</small><br>
+    {% endif %}
+    <small>Autorstwa: {{ post.author }}</small><br><br>
+    <p>{{ post.content|safe }}</p>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" width="auto" height="500">
+    {% endif %}
+</center>
+<br>
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <center>
+            <a href="{% url 'blog:edit_post' post.pk %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/pen.png' %}" width="20" height="auto">&nbsp;Edytuj</a>
+            <a href="{% url 'blog:delete_post' post.pk %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/trash.png' %}" width="20" height="auto">&nbsp;Usuń</a>
+        </center>
+    {% endif %}
+    <br>
+    <br>
+    <center>
+        <form action="{% url 'blog:like_post' post.pk %}", method="POST">
+            {% csrf_token %}
+            {% if liked %}
+                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm"><img src="{% static 'blog/images/dislike.png' %}" width="30" height="auto"></button> 
+            {% else %}
+                <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm"><img src="{% static 'blog/images/like.png' %}" width="30" height="auto"></button>
+            {% endif %}
+            {% if total_likes %}
+                | {{ total_likes }} osób lubi to!
+            {% endif %}
+        </form>
+    </center>
+    <br>
+    <br>
+{% else %}
+    <center>
+        {{ total_likes }} osób lubi to!
+        <br>
+        <br>
+        Nie jesteś zalogowany!
+        <br>
+        <a class="link" href="{% url 'login' %}" class="btn btn-outline-secondary add-btn">Zaloguj się</a>
+    </center>
+{% endif %}
+<br>
+<br>
+<div class="card mb-3">
+    <div class="row no-gutters">
+      <div class="col-md-2">
+        {% if post.author.profile.profile_pic %}
+            <img src="{{ post.author.profile.profile_pic.url }}" class="card-img">
+        {% else %}
+            <img src="{% static 'blog/images/default_profile_pic.jpg' %}" class="card-img">
+        {% endif %}
+      </div>
+      <div class="col-md-10">
+        <div class="card-body">
+          <h5 class="card-title">
+            {% if post.author.profile.id %}
+                <a href="{% url 'user_profile' post.author.profile.id %}" style="text-decoration: none">
+                    {{ post.author.first_name }}
+                    {{ post.author.last_name }}
+                </a>
+            {% else %}
+                {{ post.author.first_name }}
+                {{ post.author.last_name }}
+            {% endif %}
+          </h5>
+          <p class="small text-muted">
+
+            {% if post.author.profile.website_url %}
+                <a href="{{ post.author.profile.website_url }}"><img src="{% static 'blog/images/network.png' %}" width="30" height="auto"></a>
+            {% endif %}
+
+            {% if post.author.profile.facebook_url %}
+                &nbsp;&nbsp;<a href="{{ post.author.profile.facebook_url }}"><img src="{% static 'blog/images/facebook.png' %}" width="30" height="auto"></a>
+            {% endif %}
+
+            {% if post.author.profile.twitter_url %}
+                &nbsp;&nbsp;<a href="{{ post.author.profile.twitter_url }}"><img src="{% static 'blog/images/twitter.png' %}" width="30" height="auto"></a>
+            {% endif %}
+
+            {% if post.author.profile.instagram_url %}
+                &nbsp;&nbsp;<a href="{{ post.author.profile.instagram_url }}"><img src="{% static 'blog/images/instagram.png' %}" width="30" height="auto"></a>
+            {% endif %}
+          </p>
+          <p class="card-text">
+            {{ post.author.profile.bio }}
+          </p>
+        </div>
+      </div>
+    </div>
+</div>
+<br>
+<br>
+<h2>Komentarze:</h2>
+{% if comments_count %}
+    <small>{{ comments_count }} komentarzy</small>
+    <br><br>
+{% endif %}
+{% if not post.comments.all %}
+    Bądź pierwszym, który skomentuje ten Post! - <a href="{% url 'blog:add_comment' post.pk %}" class="btn btn-outline-secondary add-btn">Dodaj Komentarz</a>
+{% else %}
+    <a href="{% url 'blog:add_comment' post.pk %}" class="btn btn-outline-secondary add-btn">Dodaj Komentarz</a>
+    <br>
+    <br>
+    {% for comment in post.comments.all %}
+        <div class="commentdiv">
+            <small>
+                {{ comment.author }}
+                | Dodano: {{ comment.created|date:"d M Y H:i" }}
+                {% if comment.created != comment.modified %}
+                    | Edytowano: {{ comment.modified|date:"d M Y H:i" }}
+                {% endif %}
+            </small>
+            <p>{{ comment.content }}</p>
+            {% if user.is_authenticated %}
+                {% if user.id == comment.author.id %}
+                    <a href="{% url 'blog:edit_comment' comment.pk %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/pen.png' %}" width="20" height="auto">&nbsp;Edytuj</a>
+                    <a href="{% url 'blog:delete_comment' comment.pk %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/trash.png' %}" width="20" height="auto">&nbsp;Usuń</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <br>
+    {% endfor %}
+{% endif %}
+<center>
+    <br>
+    <br>
+    <a href="{% url 'blog:home' %}" class="btn btn-outline-secondary add-btn">Wróć</a>
+</center>
+<br>
+<br>
+<hr>
+
+{% endblock %}

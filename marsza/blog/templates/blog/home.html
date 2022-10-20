@@ -1,0 +1,86 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}MARSZA | BLOG{% endblock %}
+
+{% block content %}
+<style>
+    .box-element
+    {
+	  box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+	  background-color: #fff;
+	  border-radius: 4px;
+      width: 800px;
+	  padding: 10px;
+    }
+</style>
+
+<center><h1>Co słychać u Ciebie?</h1></center>
+{% if user.is_authenticated %}
+    <center><a href="{% url 'blog:add_post' %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/more.png' %}" width="30" height="auto">&nbsp;&nbsp;Dodaj Post</a></center>
+{% else %}
+    <center>
+        Zaloguj się aby dodać post.
+        <a class="link" href="{% url 'login' %}" class="btn btn-outline-secondary add-btn">Zaloguj się</a>
+    </center>
+{% endif %}
+<hr>
+<br>
+<br>  
+ 
+<center><h1>Zobacz co słychać u innych...</h1></center>
+<hr>
+
+{% for post in object_list %}
+    <center>
+        <div class="box-element">
+            <h4><a href="{% url 'blog:post_details' post.pk %}" style="text-decoration: none">{{ post.title }}</a></h4>
+            <small>Kategoria: <a href="{% url 'blog:category' post.category %}" style="text-decoration: none">{{ post.category }}</a></small><br>
+            <small>Dodano: {{ post.created|date:"d M Y H:i" }}</small>
+            {% if post.created != post.modified %}
+                <small>Edytowano: {{ post.modified|date:"d M Y H:i" }}</small><br>
+            {% endif %}
+            <small>Autorstwa: {{ post.author }}</small>
+            <p>{{ post.snippet }}</p>
+            {% if post.image %}
+                <img src="{{ post.image.url }}" width="auto" height="200">
+            {% endif %}  
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                    <br>
+                    <br>
+                    <a href="{% url 'blog:edit_post' post.pk %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/pen.png' %}" width="20" height="auto">&nbsp;Edytuj</a>
+                    <a href="{% url 'blog:delete_post' post.pk %}" class="btn btn-outline-secondary add-btn"><img src="{% static 'blog/images/trash.png' %}" width="20" height="auto">&nbsp;Usuń</a>
+                {% endif %}
+            {% endif %}
+            {% if post.likes_count %}
+                <br>
+                <br>
+                {{ post.likes_count }} osób lubi ten post!
+            {% endif %}
+        </div>
+    </center>
+    <br>
+{% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-primary btn-sm">&laquo; Pierwsza</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-primary btn-sm">Poprzednia</a>
+        {% endif %}
+
+        <span class="current">
+            Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-primary btn-sm">Następna</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary btn-sm">Ostatnia &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+<br>
+<br>
+<hr>
+
+{% endblock %}

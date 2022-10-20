@@ -1,0 +1,39 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Edytuj Stronę Profilową!{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    {% if user.id == profile.user.id %}
+        <center><h1>Edytuj Stronę Profilową!</h1></center>
+        <br>
+        <br>
+        <div class="form-group">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-secondary"><img src="{% static 'blog/images/refresh-button.png' %}" width="20" height="auto">&nbsp;Zapisz</button>
+            </form>
+        </div>
+        <br>
+        <br>    
+    {% else %}
+    <center><h4>Nie możesz edytować nie swoich danych!</h4></center>
+    {% endif %}
+{% else %}
+    <center>
+        <h4>Nie jesteś zalogowany!</h4>
+        <br>
+        <a class="link" href="{% url 'login' %}" class="btn btn-secondary">Zaloguj się</a>
+    </center>
+{% endif %}
+<br>
+<br>
+<center><a href="{% url 'blog:home' %}" class="btn btn-secondary">Wróć</a></center>
+<br>
+<br>
+<hr>
+
+{% endblock %}

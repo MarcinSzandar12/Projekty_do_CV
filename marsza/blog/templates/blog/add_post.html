@@ -1,0 +1,40 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Dodaj nowy wpis!{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <center><h1>Napisz co nowego się dziś u Ciebie wydarzyło!</h1></center>
+    <br>
+    <br>
+    <div class="form-group">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <button class="btn btn-secondary"><img src="{% static 'blog/images/send.png' %}" width="20" height="auto">&nbsp;Dodaj</button>
+        </form>
+    </div>
+    <br>
+    <br>
+    <center><a href="{% url 'blog:home' %}" class="btn btn-secondary">Wróć</a></center>
+
+    <script>
+        var name = "{{ user.id }}";
+        document.getElementById("user_id").value = name;
+    </script>
+
+{% else %}
+    <center>
+        Nie jesteś zalogowany!
+        <br>
+        <a class="link" href="{% url 'login' %}" class="btn btn-secondary">Zaloguj się</a>
+    </center>
+{% endif %}
+<br>
+<br>
+<hr>
+
+{% endblock %}

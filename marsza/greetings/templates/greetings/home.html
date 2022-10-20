@@ -1,0 +1,50 @@
+{% extends 'greetings/base.html' %}
+{% load static %}
+
+{% block title %}MARSZA{% endblock %}
+
+{% block content %}
+<style>
+    .logindiv 
+    {
+      width: 300px;
+      padding: 20px;
+      border: 2px solid gray;
+      margin: 0;
+      background-color: #CCCBCA;
+    }
+
+    .center 
+    {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+</style>
+
+<center><h1>Witamy na Stronie Głównej MARSZA!</h1></center>
+<br>
+<br>
+{% if user.is_authenticated %}
+
+{% else %}
+    <center>
+        <div class="logindiv">
+
+            <a href="{% url 'login' %}" class="btn btn-secondary">Zaloguj</a>
+            <br>
+            <br>
+            <a href="{% url 'register' %}" class="btn btn-secondary">Zarejestruj się</a>
+
+        </div>
+    </center>
+{% endif %}
+<br>
+<br>
+<img src="{% static 'greetings/images/nice_view.jpg' %}" class="center">
+<br>
+<br>
+<hr>
+
+{% endblock %}

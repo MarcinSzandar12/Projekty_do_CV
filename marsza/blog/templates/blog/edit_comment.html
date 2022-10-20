@@ -1,0 +1,34 @@
+{% extends 'blog/base.html' %}
+{% block title %}Zmodyfikuj Komentarz!{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    {% if user.id == comment.author.id %}
+        <center><h1>Chcesz coś zmienić? Smiało!</h1></center>
+        <br>
+        <br>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-secondary">Zmodyfikuj</button>
+            </form>
+        </div>
+    {% else %}
+        <center><h3>Nie masz uprawnień do edycji tego posta!</h3></center>
+    {% endif %}
+    <br>
+    <br>
+    <center><a href="{% url 'blog:home' %}" class="btn btn-secondary">Wróć</a></center>
+{% else %}
+<center>
+    Nie jesteś zalogowany!
+    <br>
+    <a class="link" href="{% url 'login' %}" class="btn btn-secondary">Zaloguj się</a>
+</center>
+{% endif %}
+<br>
+<br>
+<hr>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Edytuj Dane Konta{% endblock %}
+
+{% block content %}
+ 
+<center><h1>Edytuj dane Konta</h1></center>
+<br>
+<br>
+
+{{ user.profile.bio }}
+
+<br>
+<br>
+<div class="form-group">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <center><button class="btn btn-secondary"><img src="{% static 'blog/images/refresh-button.png' %}" width="20" height="auto">&nbsp;Zapisz</button></center>
+    </form>
+</div>
+<br>
+<br>
+<hr>
+
+{% endblock %}
